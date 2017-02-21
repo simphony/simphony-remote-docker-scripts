@@ -1,0 +1,4 @@
+USER=username
+JPY_USER=username
+JPY_BASE_USER_URL=/user/username
+URL_ID=unique_path
