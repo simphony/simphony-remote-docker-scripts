@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:experimental
+# NOTE: Make sure to use Docker BuildKit by setting DOCKER_BUILDKIT=1
+# as an environment variable beforehand (or by using ssh_required=true in any
+# simphony-remote build.conf)
+FROM <base_image>
+
+# Install ssh client and git
+RUN apt-get update
+RUN apt-get install -y git openssh-client
+
+# Download public key from host domain
+RUN mkdir -p -m 0600 ~/.ssh
+RUN ssh-keyscan <host_domain> >> ~/.ssh/known_hosts
+
+# Clone private repo
+# NOTE: this must be combined with the '--ssh default' tag included
+# in the docker build command in order for the mount to work
+RUN mkdir /usr/local/
+RUN --mount=type=ssh git clone git@<host_domain>:<repo_name> \
+    /usr/local/<repo_name>
