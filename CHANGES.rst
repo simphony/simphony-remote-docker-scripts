@@ -1,7 +1,7 @@
 SimPhoNy Remote Docker CHANGELOG
 ================================
 
-Release 0.6.0
+Release 0.6.0.dev0
 -------------------
 
 Features

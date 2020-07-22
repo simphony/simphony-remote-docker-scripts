@@ -44,7 +44,7 @@ Taking the ``simphony-remote-docker-mayavi`` repository as an example, the steps
 
 2. Click `Create > Create automated build` in the topbar menu.
 
-3. Click the giant ``create auto build GitLab`` button,
+3. Click the giant ``create auto build GitHub`` button,
    select ``simphony`` and ``simphony-remote-docker-mayavi``. This will create a new build
    bound to that github repository.
 
