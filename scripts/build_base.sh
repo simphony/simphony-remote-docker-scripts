@@ -14,7 +14,7 @@ display_help() {
 
 if [ -z "$1" ]; then
     echo "Need path to the config file"
-    echo 
+    echo
     display_help
     exit 1
 fi
@@ -50,12 +50,14 @@ fi
 tag=${RESULT}
 
 # Construct docker context for production
-for entry in `ls -d $production_dir/*/`; do
+for entry in `ls -d $production_dir/*`; do
     # One sub-directory for each image
     image_name=`basename $entry`
-    echo "Building "$entry 
-
-    docker build --no-cache --rm -f $entry/Dockerfile -t $image_prefix/$image_name:$tag .
+    echo "Building "$entry
+	cd $DIR
+    absolute_path=$(readlink -m $entry)
+	cd $absolute_path
+	docker build --no-cache --rm -f $absolute_path/Dockerfile -t $image_prefix/$image_name:$tag .
 
     if test $? -ne 0; then
         echo "Error occurred while building $entry. Exiting"
