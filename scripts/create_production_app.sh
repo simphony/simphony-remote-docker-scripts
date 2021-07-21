@@ -54,6 +54,15 @@ fi
 production_dir=$operating_dir/${RESULT%/}
 image_name=`basename $app_dir`
 
+# image prefix
+extract_key "$config_file" "image_prefix"
+if [ -z "$RESULT" ]; then
+    echo "Need image_prefix in config file"
+    display_help
+    exit 1
+fi
+image_prefix=${RESULT}
+
 echo "Removing "$production_dir/$image_name
 rm -rf $production_dir/$image_name
 
@@ -65,10 +74,11 @@ rsync -a --exclude='*~' $app_dir/* $production_dir/$image_name/
 
 # Create the final Dockerfile from the "template" one
 
-# Replace the tag in the docker file FROM entry
+# Replace the tag in any docker file FROM entry that includes the image_prefix
 # Get it out of the way so if it fails we are guaranteed not to use a broken dockerfile.
-mv $production_dir/$image_name/Dockerfile $production_dir/$image_name/Dockerfile.template 
-sed 's/^FROM \([^:]*\)/FROM \1:'$base_tag'/g' $production_dir/$image_name/Dockerfile.template > $production_dir/$image_name/Dockerfile.build
+mv $production_dir/$image_name/Dockerfile $production_dir/$image_name/Dockerfile.template
+sed 's/^FROM '${image_prefix}'\([^:]*\)\(.*\)/FROM '${image_prefix}'\1:'$base_tag'/g' \
+   $production_dir/$image_name/Dockerfile.template > $production_dir/$image_name/Dockerfile.build
 rm $production_dir/$image_name/Dockerfile.template 
 
 # if there's an icon, base encode it and use it.

@@ -1,6 +1,15 @@
 SimPhoNy Remote Docker CHANGELOG
 ================================
 
+Release 0.6.0.dev0
+-------------------
+
+Features
+~~~~~~~~
+- Fix to image tags (#1)
+- Handling ssh keys for commands that need passwords (#1)
+- Documentation update for handling ssh commands (#1)
+
 Release 0.5.0/0.5.1
 -------------------
 

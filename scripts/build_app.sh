@@ -61,11 +61,21 @@ if [ -z "$RESULT" ]; then
 fi
 image_prefix=${RESULT}
 
+# Whether or not to use Docker BuildKit in order to handle ssh keys
+extract_key "$config_file" "ssh_required"
+ssh_required=${RESULT}
+
 echo "Building "$image_name
 
 pushd $production_dir/$image_name
 
-docker build --no-cache --rm -f Dockerfile -t $image_prefix/$image_name:$tag .
+if [ ${ssh_required} == 'true' ]; then
+  echo "Using Docker BuildKit"
+  export DOCKER_BUILDKIT=1
+  docker build --no-cache --rm -f Dockerfile -t $image_prefix/$image_name:$tag --ssh default .
+else
+  docker build --no-cache --rm -f Dockerfile -t $image_prefix/$image_name:$tag .
+fi
 
 if test $? -ne 0; then
     echo "Error occurred while building $image_name. Exiting"
