@@ -55,7 +55,7 @@ for entry in `ls -d $production_dir/*/`; do
     image_name=`basename $entry`
     echo "Building "$entry 
 
-    docker build --no-cache --rm -f $entry/Dockerfile -t $image_prefix/$image_name:$tag .
+    docker build --no-cache --rm -f $entry/Dockerfile -t $image_prefix/$image_name:$tag "$entry"
 
     if test $? -ne 0; then
         echo "Error occurred while building $entry. Exiting"
