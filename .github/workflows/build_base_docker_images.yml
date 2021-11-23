@@ -1,0 +1,33 @@
+# This workflow builds the base Docker images as described in `README.rst`
+
+name: Build base Docker images
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '59 23 7,22 1-12 *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Check out the "simphony/simphony-remote-docker-base" repo
+      uses: actions/checkout@v2
+      with:
+        repository: simphony/simphony-remote-docker-base
+        path: simphony-remote-docker-base
+    - name: Check out this repo
+      uses: actions/checkout@v2
+      with:
+        path: simphony-remote-docker-scripts
+    - name: Build base Docker images
+      run: |
+        cd simphony-remote-docker-scripts/scripts
+        bash create_production_base.sh ../../simphony-remote-docker-base/build.conf
+        bash build_base.sh ../../simphony-remote-docker-base/build.conf
